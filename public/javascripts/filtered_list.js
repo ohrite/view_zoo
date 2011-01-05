@@ -137,7 +137,7 @@ $.extend(FilteredList.prototype, {
     }
 
     this.previousCapacity = this.containerItemCapacity;
-    this.containerItemCapacity = Math.floor(this.viewport.height() / this.childHeight);
+    this.containerItemCapacity = Math.ceil(this.viewport.height() / this.childHeight);
 
     this.renderItems(this.containerItemOffset, Math.min(this.filteredKeys.length - this.containerItemOffset, this.containerItemCapacity + 1));
 
