@@ -9,27 +9,15 @@ var fakeName = (function(){
     "Laporte", "Simonoff", "Rainbow", "Karimov"
   ];
   
-  function hash(parameter)
-  {
-  	var result = 5381;
-  	
-  	for (var i = 0, c; parameter[i] && (c = parameter.charCodeAt(i)); i++) {
-  	  hash = ((hash << 5) + hash) + c;
-  	}
-  	
-  	return hash;
-  }
-
   return function(parameter) {
     var surname, family;
     
     if (parameter) {
-      var seed = hash(parameter);
-      surname = seed % surnames.length;
-      family = seed % families.length;
+      surname = parameter % (surnames.length - 1);
+      family = parameter % (families.length - 1);
     } else {
-      surname = Math.floor(Math.random() * surnames.length);
-      family = Math.floor(Math.random() * families.length);
+      surname = Math.floor(Math.random() * (surnames.length - 1));
+      family = Math.floor(Math.random() * (families.length - 1));
     }
     
     return { first_name: surnames[surname], last_name: families[family] };
