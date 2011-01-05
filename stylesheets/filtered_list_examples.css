@@ -1,0 +1,22 @@
+body {
+  padding: 10px;
+}
+
+.example {
+  width: 350px;
+  padding-bottom: 10px;
+}
+
+.example > * {
+  padding: 10px 10px 0 10px;
+}
+
+.filter {
+  text-align: right;
+}
+
+.viewport {
+  overflow-y: scroll;
+  height: 300px;
+}
+

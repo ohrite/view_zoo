@@ -1,0 +1,65 @@
+---
+num_contacts: 5000
+---
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Long Email List example</title>
+  <script src="./javascripts/jquery-1.3.2.js"></script>
+  <script src="./javascripts/underscore.js"></script>
+  <script src="./javascripts/array_utilities.js"></script>
+  <script src="./javascripts/data_cache.js"></script>
+  <script src="./javascripts/filtered_list.js"></script>
+
+  <link rel="stylesheet" href="./stylesheets/reset.css" type="text/css">
+  <link rel="stylesheet" href="./stylesheets/filtered_list_examples.css" type="text/css">
+</head>
+<body>
+  <div class="example">
+    <p>This is a trivial example that shows filtering of a static list of items.</p>
+    <div class="filter">
+      <label>Filter results:</label>
+      <input>
+    </div>
+    <div id="contact_list" class="viewport"></div>
+  </div>
+
+<script language="JavaScript">
+  var orderedContactKeys = [
+    {% for idx in (1..page.num_contacts) %}
+      'email-{{ idx }}@example.com'{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ];
+  var contactMap = {
+    {% for idx in (1..page.num_contacts) %}
+      'email-{{ idx }}@example.com': {
+        first_name: '{% cycle 'Joe', 'Mary', 'Bob', 'Liz', 'Eunice', 'Bertrand', 'Leopold' %}',
+        last_name: '{% cycle 'Smith', 'Jones', 'Chen', 'Lin', 'Lee', 'Black', 'White', 'Green', 'Ramirez', 'Morse', 'Chapman' %}'}{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  };
+
+  $(function() {
+    var contactCache = new DataCache('contact_cache', {
+      indexer: function contactIndexer(key, contact) {
+        return (key + contact.first_name + contact.last_name).toLowerCase().replace(/ /g, '');
+      }
+    });
+    contactCache.map(contactMap);
+
+    var contactList = $('#contact_list').filteredList({
+      scrollable: true,
+      filterBox: $('.filter input'),
+      keys: orderedContactKeys,
+      dataCache: contactCache,
+      renderHit: function renderContact(key, value) {
+        return $('<li>'+value.first_name+' '+value.last_name+' ('+key+')</li>');
+      },
+      renderMiss: function renderContactMiss(key) {
+        return $('<li>' + key + '</li>');
+      }
+    });
+  })
+</script>
+
+</body>
+</html>
