@@ -29,7 +29,7 @@ var fakeName = (function(){
       family = seed % families.length;
     } else {
       surname = Math.floor(Math.random() * surnames.length);
-      family = Math.floor(Math.random() * family.length);
+      family = Math.floor(Math.random() * families.length);
     }
     
     return { first_name: surnames[surname], last_name: families[family] };
