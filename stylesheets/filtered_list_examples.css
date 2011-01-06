@@ -2,6 +2,15 @@ body {
   padding: 10px;
 }
 
+.left, .right {
+  vertical-align: top;
+  display: inline-block;
+  width: 40%;
+}
+.right {
+  width: auto;
+}
+
 .example {
   width: 350px;
   padding-bottom: 10px;
