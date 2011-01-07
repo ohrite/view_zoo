@@ -4,8 +4,7 @@ body {
 
 .left, .right {
   vertical-align: top;
-  display: inline-block;
-  width: 40%;
+  width: 18em;
 }
 .right {
   width: auto;

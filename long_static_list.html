@@ -1,30 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Long Email List example</title>
-  <script src="./javascripts/jquery-1.3.2.js"></script>
-  <script src="./javascripts/underscore.js"></script>
-  <script src="./javascripts/array_utilities.js"></script>
-  <script src="./javascripts/data_cache.js"></script>
-  <script src="./javascripts/filtered_list.js"></script>
-  <script src="./javascripts/fake_name.js"></script>
+<h2>Long Static List</h2>
 
-  <link rel="stylesheet" href="./stylesheets/reset.css" type="text/css">
-  <link rel="stylesheet" href="./stylesheets/filtered_list_examples.css" type="text/css">
-</head>
-<body>
-  <div class="example">
-    <p>This is a trivial example that shows filtering of a static list of items.</p>
-    <p>Note that this search is case-insensitive and you can use multiple search terms;
-    for instance, try "jo", "jo kr", "jo 9", "joec"</p>
-    <div class="filter">
-      <label>Filter results:</label>
-      <input>
-    </div>
-    <div id="contact_list" class="viewport"></div>
+<div class="example">
+  <p>This is a trivial example that shows filtering of a static list of items.</p>
+  <p>Note that this search is case-insensitive and you can use multiple search terms;
+  for instance, try "jo", "jo kr", "jo 9", "joek"</p>
+  <div class="filter">
+    <label>Filter results:</label>
+    <input>
   </div>
+  <div id="contact_list" class="viewport"></div>
+</div>
 
-<script language="JavaScript">
+<script type="text/javascript">
   var orderedContactKeys = [];
   var contactMap = {};
   
@@ -34,31 +21,26 @@
     contactMap[addr] = fakeName(i);
   }
 
-  $(function() {
-    var contactCache = new DataCache('contact_cache', {
-      indexer: function contactIndexer(key, contact) {
-        return (key + contact.first_name + contact.last_name).toLowerCase().replace(/ /g, '');
-      }
-    });
-    
-    contactCache.map(contactMap);
+  var contactCache = new DataCache('contact_cache', {
+    indexer: function contactIndexer(key, contact) {
+      return (key + contact.first_name + contact.last_name).toLowerCase().replace(/ /g, '');
+    }
+  });
 
-    var contactList = $('#contact_list').filteredList({
-      scrollable: true,
-      filterBox: $('.filter input'),
-      keys: orderedContactKeys,
-      dataCache: contactCache,
-      renderHit: function renderContact(key, value) {
-        var li = $('<li></li>');
-        li.text(value.first_name + ' ' + value.last_name + ' (' + key + ')');
-        return li;
-      },
-      renderMiss: function renderContactMiss(key) {
-        return $('<li>' + key + '</li>');
-      }
-    });
-  })
+  contactCache.map(contactMap);
+
+  var contactList = $('#contact_list').filteredList({
+    scrollable: true,
+    filterBox: $('.filter input'),
+    keys: orderedContactKeys,
+    dataCache: contactCache,
+    renderHit: function renderContact(key, value) {
+      var li = $('<li></li>');
+      li.text(value.first_name + ' ' + value.last_name + ' (' + key + ')');
+      return li;
+    },
+    renderMiss: function renderContactMiss(key) {
+      return $('<li>' + key + '</li>');
+    }
+  });
 </script>
-
-</body>
-</html>

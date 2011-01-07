@@ -1,0 +1,60 @@
+<h2>Options</h2>
+<table>
+  <thead>
+    <th>Option</th>
+    <th>Default</th>
+    <th>Description</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>viewport</td>
+      <td><em>required</em></td>
+      <td>A jquery reference to the DOM element that holds the filtered list. If using AJAX to
+      populate the data cache, this element must have an id or selector must be set.</td>
+    </tr>
+    <tr>
+      <td>dataCache</td>
+      <td><em>required</em></td>
+      <td>The DataCache object which stores the items.</td>
+    </tr>
+    <tr>
+      <td>renderHit</td>
+      <td><em>required</em></td>
+      <td>A function which creates HTML for an item that has full data; receives the key
+      and the cache data for the item.</td>
+    </tr>
+    <tr>
+      <td>renderMiss</td>
+      <td><em>required</em></td>
+      <td>A function which creates HTML for an item that has not fetched data yet; receives
+      the key of the item. Note that this is required even in the case of a pre-populated
+      cache (i.e. static data set) because it is used to size the elements.</td>
+    </tr>
+    <tr>
+      <td>filterBox</td>
+      <td>null</td>
+      <td>A jquery reference to the DOM input that holds the search terms</td>
+    </tr>
+    <tr>
+      <td>keys</td>
+      <td>[]</td>
+      <td>An ordered list of the items that should be displayed.</td>
+    </tr>
+    <tr>
+      <td>scrollable</td>
+      <td>false</td>
+      <td>Set to true to allow the user to scroll the filtered list</td>
+    </tr>
+    <tr>
+      <td>selectable</td>
+      <td>false</td>
+      <td>Set to true to allow users to click on items. Selected items are remembered
+      even when filtered out by the search terms.</td>
+    </tr>
+    <tr>
+      <td>selector</td>
+      <td>viewport.attr('id')</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
