@@ -6,6 +6,9 @@ that has a list of email addresses on it, and then asynchronously perform
 a lookup that returns the user's full name, phone extension, etc. The
 filtering works with whatever information is currently available.
 
+The [API and Examples](http://emi.github.com/filtered_list) are on
+Filtered List's [github page](http://emi.github.com/filtered_list).
+
 ## Features:
    * remains very fast even with thousands of items
    * items can be filtered by search terms
