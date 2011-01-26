@@ -18,6 +18,26 @@ body {
   padding-bottom: 10px;
 }
 
+th, tr.odd td, tr.even td {
+  padding: 3px;
+}
+
+th {
+  background-color: #ccc;
+}
+
+tr.odd td {
+  background-color: #eef;
+}
+
+tr.even td {
+  background-color: #eee;
+}
+
+.filter {
+  text-align: right;
+}
+
 .example {
   width: 350px;
   padding-bottom: 10px;
@@ -25,10 +45,6 @@ body {
 
 .example > * {
   padding: 10px 10px 0 10px;
-}
-
-.filter {
-  text-align: right;
 }
 
 .viewport {

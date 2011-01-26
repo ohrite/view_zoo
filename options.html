@@ -1,3 +1,5 @@
+---
+---
 <h2>Options</h2>
 <table>
   <thead>
@@ -6,52 +8,52 @@
     <th>Description</th>
   </thead>
   <tbody>
-    <tr>
+    <tr class="{% cycle 'odd', 'even'%}">
       <td>viewport</td>
       <td><em>required</em></td>
       <td>A jquery reference to the DOM element that holds the filtered list. If using AJAX to
       populate the data cache, this element must have an id or selector must be set.</td>
     </tr>
-    <tr>
+    <tr class="{% cycle 'odd', 'even' %}">
       <td>dataCache</td>
       <td><em>required</em></td>
       <td>The DataCache object which stores the items.</td>
     </tr>
-    <tr>
+    <tr class="{% cycle 'odd', 'even' %}">
       <td>renderHit</td>
       <td><em>required</em></td>
       <td>A function which creates HTML for an item that has full data; receives the key
       and the cache data for the item.</td>
     </tr>
-    <tr>
+    <tr class="{% cycle 'odd', 'even' %}">
       <td>renderMiss</td>
       <td><em>required</em></td>
       <td>A function which creates HTML for an item that has not fetched data yet; receives
       the key of the item. Note that this is required even in the case of a pre-populated
       cache (i.e. static data set) because it is used to size the elements.</td>
     </tr>
-    <tr>
+    <tr class="{% cycle 'odd', 'even' %}">
       <td>filterBox</td>
       <td>null</td>
       <td>A jquery reference to the DOM input that holds the search terms</td>
     </tr>
-    <tr>
+    <tr class="{% cycle 'odd', 'even' %}">
       <td>keys</td>
       <td>[]</td>
       <td>An ordered list of the items that should be displayed.</td>
     </tr>
-    <tr>
+    <tr class="{% cycle 'odd', 'even' %}">
       <td>scrollable</td>
       <td>false</td>
       <td>Set to true to allow the user to scroll the filtered list</td>
     </tr>
-    <tr>
+    <tr class="{% cycle 'odd', 'even' %}">
       <td>selectable</td>
       <td>false</td>
       <td>Set to true to allow users to click on items. Selected items are remembered
       even when filtered out by the search terms.</td>
     </tr>
-    <tr>
+    <tr class="{% cycle 'odd', 'even' %}">
       <td>selector</td>
       <td>viewport.attr('id')</td>
       <td>A string that jquery can use to find the DOM element that contains the filtered
