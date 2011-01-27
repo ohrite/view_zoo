@@ -20,7 +20,8 @@ function DataCache(name, options) {
     eventName: 'datacache.' + name + '.event',
     queryRequestFormatter: options.queryRequestFormatter,
     queryResponseFormatter: options.queryResponseFormatter || function(response){ return response; },
-    indexer: options.indexer
+    indexer: options.indexer,
+    ajaxDelayMs: options.ajaxDelayMs || 50
   });
 }
 
@@ -129,6 +130,7 @@ DataCache.prototype = {
           self.unlinkPendingKey(value.node);
           value.node = null;
         }
+        value.search = self.indexer(key, mapping);
       }
     });
 
@@ -151,20 +153,17 @@ DataCache.prototype = {
   queryServer: function(keys) {
     var self = this;
     self.inFlight = true;
-
     $.ajax({
       url: self.url,
       type: "post",
       dataType: "json",
       data: self.queryRequestFormatter(keys),
       success: function(response) {
-        self.inFlight = false;
-
         self.map(self.queryResponseFormatter(response));
-
         setTimeout(function(){
+          self.inFlight = false;
           self.startQueries();
-        }, 50);
+        }, self.ajaxDelayMs);
       },
       error: function() {
         self.inFlight = false;
