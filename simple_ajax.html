@@ -1,0 +1,67 @@
+<h2>Simple Ajax</h2>
+
+<div class="example">
+  <p>This example shows fetching items one at a time through ajax. By scrolling to
+    the bottom of the list or filtering the results, you can see how the queue is
+    prioritized towards items currently on screen. You can search on emails immediately,
+    first name/last name are then addressed as they are filled in.</p>
+  <div class="filter">
+    <label>Filter results:</label>
+    <input>
+  </div>
+  <div id="contact_list" class="viewport"></div>
+</div>
+
+<script type="text/javascript">
+  // Simulating data that would be provided by the server
+  var orderedContactKeys = [];
+  for (var i = 1, addr; i <= 99; i++) {
+    addr = "email-" + i + "@example.com";
+    orderedContactKeys[i - 1] = addr;
+  }
+  // end of server data simulation
+  
+  // Simulate the server providing data
+  var requestedKeys;
+  function simulateRequest(request) {
+    requestedKeys = request;
+    return { "keys": request.join(",") };
+  }
+  function simulateResponse() {
+    response = {};
+    $.each(requestedKeys, function(index, email) {
+      response[email] = fakeName(email.match(/email-(\d+)/)[1]);
+    });
+    return response;
+  }
+
+  // Build the widgets and start the lookup
+  var contactCache = new DataCache('contact_cache', {
+    batchSize: 1,
+    indexer: function contactIndexer(key, contact) {
+      var contactElements = contact ? contact.first_name + contact.last_name : '';
+      return (key + contactElements).toLowerCase().replace(/ /g, '');
+    },
+    url: './dummy_response.json',
+    queryRequestFormatter: function reqFmt(request) { return simulateRequest(request); },
+    queryResponseFormatter: function respFmt(response) { return simulateResponse(); },
+    ajaxDelayMs: 500  // Slow it down so you can see them fill in
+  });
+
+  var contactList = $('#contact_list').filteredList({
+    scrollable: true,
+    filterBox: $('.filter input'),
+    keys: orderedContactKeys,
+    dataCache: contactCache,
+    renderHit: function renderContact(key, value) {
+      var li = $('<li></li>');
+      li.text(value.first_name + ' ' + value.last_name + ' (' + key + ')');
+      return li;
+    },
+    renderMiss: function renderContactMiss(key) {
+      return $('<li>' + key + '</li>');
+    }
+  });
+  
+  contactCache.lookup(orderedContactKeys);
+</script>
