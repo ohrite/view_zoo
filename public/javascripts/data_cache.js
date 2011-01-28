@@ -21,7 +21,7 @@ function DataCache(name, options) {
     queryRequestFormatter: options.queryRequestFormatter,
     queryResponseFormatter: options.queryResponseFormatter || function(response){ return response; },
     indexer: options.indexer,
-    ajaxType: options.ajaxMethod || 'post',
+    ajaxType: options.ajaxType || 'post',
     ajaxDelayMs: options.ajaxDelayMs || 50
   });
 }
