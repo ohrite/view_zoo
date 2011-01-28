@@ -21,6 +21,7 @@ function DataCache(name, options) {
     queryRequestFormatter: options.queryRequestFormatter,
     queryResponseFormatter: options.queryResponseFormatter || function(response){ return response; },
     indexer: options.indexer,
+    ajaxType: options.ajaxMethod || 'post',
     ajaxDelayMs: options.ajaxDelayMs || 50
   });
 }
@@ -155,7 +156,7 @@ DataCache.prototype = {
     self.inFlight = true;
     $.ajax({
       url: self.url,
-      type: "post",
+      type: self.ajaxType,
       dataType: "json",
       data: self.queryRequestFormatter(keys),
       success: function(response) {
