@@ -1,0 +1,56 @@
+---
+---
+<h2>DataCache Options</h2>
+<table>
+  <thead>
+    <th>Option</th>
+    <th>Default</th>
+    <th>Description</th>
+  </thead>
+  <tbody>
+    <tr class="{% cycle 'odd', 'even'%}">
+      <td>indexer</td>
+      <td><em>required</em></td>
+      <td>A function that takes the key and value (which will be null for items which
+        have not yet been looked up) and returns a string of the searchable terms in
+        the item.</td>
+    </tr>
+    <tr class="{% cycle 'odd', 'even'%}">
+      <td>batchSize</td>
+      <td><em>100</em></td>
+      <td>Maximum number of items to look up with each ajax call.</td>
+    </tr>
+    <tr class="{% cycle 'odd', 'even' %}">
+      <td>url</td>
+      <td><em>null</em></td>
+      <td>URL to use for ajax lookup calls.</td>
+    </tr>
+    <tr class="{% cycle 'odd', 'even' %}">
+      <td>cache</td>
+      <td><em>{}</em></td>
+      <td>Can be used to pre-seed loaded items. Generally not recommended.</td>
+    </tr>
+    <tr class="{% cycle 'odd', 'even' %}">
+      <td>queryRequestFormatter</td>
+      <td><em>null</em></td>
+      <td>A function takes an array of keys and returns a value which can be used
+        as the data parameter to the ajax url.</td>
+    </tr>
+    <tr class="{% cycle 'odd', 'even' %}">
+      <td>queryResponseFormatter</td>
+      <td><em>(passthrough)</em></td>
+      <td>A function that takes the ajax response and turns it into a map of keys and
+        values.</td>
+    </tr>
+    <tr class="{% cycle 'odd', 'even' %}">
+      <td>ajaxType</td>
+      <td><em>"post"</em></td>
+      <td>HTTP method of the ajax lookup.</td>
+    </tr>
+    <tr class="{% cycle 'odd', 'even' %}">
+      <td>ajaxDelayMs</td>
+      <td><em>50</em></td>
+      <td>A throttle on the speed with which ajax lookups are made</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,9 +1,6 @@
 <h2>Simple Ajax</h2>
 
 <div class="example">
-  <p>N.B. This example is working locally but has not survived the transition to
-    Github Pages. Working on it...</p>
-    
   <p>This example shows fetching items one at a time through ajax. By scrolling to
     the bottom of the list or filtering the results, you can see how the queue is
     prioritized towards items currently on screen. You can search on emails immediately,
@@ -48,6 +45,7 @@
     url: './dummy_response.json',
     queryRequestFormatter: function reqFmt(request) { return simulateRequest(request); },
     queryResponseFormatter: function respFmt(response) { return simulateResponse(); },
+    ajaxType: 'get',   // Github pages will not respond to POST
     ajaxDelayMs: 500  // Slow it down so you can see them fill in
   });
 
