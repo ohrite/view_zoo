@@ -1,5 +1,6 @@
 describe("DataCache", function() {
   var cache;
+  var ajaxDelay = 50;
 
   beforeEach(function() {
     var content = $("<div class='listener'></div>");
@@ -7,6 +8,7 @@ describe("DataCache", function() {
     cache = new DataCache('jasminetest', {
       url: "earl",
       batchSize: 2,
+      ajaxDelayMs: ajaxDelay,
       queryRequestFormatter: function requestFormatter(request) { return { "keys[]": request }; },
       queryResponseFormatter: function responseFormatter(response) { return response; },
       indexer: function testingIndexer(key, value) {
@@ -53,8 +55,15 @@ describe("DataCache", function() {
       cache.subscribe('body');
       cache.queryServer(['foo']);
       expect(triggered).toBeFalsy();
-      simulateAjaxSuccess({ foo: 'but I HATE foo'});
+      simulateAjaxSuccess({ foo: 'but I HATE foo' });
       expect(triggered).toBeTruthy();
+    });
+
+    it('should update the search criteria with the returned item', function() {
+      expect(cache.find('but')).toEqual([]);
+      cache.lookup(['foo', 'bar', 'baz']);
+      simulateAjaxSuccess({ foo: 'but I HATE foo' });
+      expect(cache.find('but')).toEqual(['foo']);
     });
   });
 
@@ -86,13 +95,20 @@ describe("DataCache", function() {
     it('should submit the next batch', function() {
       expect($.ajax.calls.length).toEqual(1);
       simulateAjaxSuccess({ gargling: 'often', whiskey: 'sure' });
-      jasmine.Clock.tick(100);
+      jasmine.Clock.tick(ajaxDelay);
 
       expect($.ajax.calls.length).toEqual(2);
       simulateAjaxSuccess({ kelly: 'cookies' });
-      jasmine.Clock.tick(100);
+      jasmine.Clock.tick(ajaxDelay);
 
       expect($.ajax.calls.length).toEqual(2);
+    });
+
+    it('should respect the ajax delay', function() {
+      simulateAjaxSuccess({ gargling: 'often', whiskey: 'sure' });
+      jasmine.Clock.tick(ajaxDelay / 2);
+      cache.startQueries();
+      expect($.ajax.calls.length).toEqual(1);
     });
   });
 
@@ -112,7 +128,7 @@ describe("DataCache", function() {
       cache.lookup(['second']);
       cache.lookup(['first']);
       simulateAjaxSuccess({});
-      jasmine.Clock.tick(100);
+      jasmine.Clock.tick(ajaxDelay);
       expect($.ajax.calls.length).toEqual(2);
       expect($.ajax.mostRecentCall.args[0]['data']).toEqual("keys%5B%5D=first&keys%5B%5D=second");
     });
@@ -122,17 +138,17 @@ describe("DataCache", function() {
       cache.lookup(['gargling']);
       cache.lookup(['kelly']);
       simulateAjaxSuccess({});
-      jasmine.Clock.tick(100);
+      jasmine.Clock.tick(ajaxDelay);
       expect($.ajax.calls.length).toEqual(2);
       expect($.ajax.mostRecentCall.args[0]['data']).toEqual("keys%5B%5D=kelly&keys%5B%5D=gargling");
 
       simulateAjaxSuccess({ gargling: 'often', kelly: 'sure' });
-      jasmine.Clock.tick(100);
+      jasmine.Clock.tick(ajaxDelay);
       expect($.ajax.calls.length).toEqual(3);
       expect($.ajax.mostRecentCall.args[0]['data']).toEqual("keys%5B%5D=third&keys%5B%5D=whiskey");
 
       simulateAjaxSuccess({ third: 'often', whiskey: 'sure' });
-      jasmine.Clock.tick(100);
+      jasmine.Clock.tick(ajaxDelay);
       expect($.ajax.calls.length).toEqual(3);
     });
 
