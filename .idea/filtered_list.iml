@@ -9,6 +9,12 @@
     </requirement>
     <requirement>
       <requirement>
+        <dependency name="jekyll" version="0.10.0" bound="EQUAL" git="false" path="false" doRequire="true" />
+      </requirement>
+      <source from="Gemfile" />
+    </requirement>
+    <requirement>
+      <requirement>
         <dependency name="json" version="1.4.6" bound="EQUAL" git="false" path="false" doRequire="true" />
       </requirement>
       <source from="Gemfile" />
