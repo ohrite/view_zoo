@@ -1,3 +1,24 @@
+function FakeNameServer() {
+  $.extend(this, {
+    requestedKeys: {}
+  });
+};
+
+$.extend(FakeNameServer.prototype, {
+  request: function(emails) {
+    this.requestedKeys = emails;
+    return { "keys": emails.join(",") };
+  },
+  
+  response: function() {
+    var map = {};
+    $.each(this.requestedKeys, function(index, email) {
+      map[email] = fakeName(email.match(/email-(\d+)/)[1]);
+    });
+    return map;
+  }
+});
+
 var fakeName = (function(){
   var surnames = [
     "Joe", "Mary", "Jane", "Jed", "Rob",

@@ -19,22 +19,9 @@
     addr = "email-" + i + "@example.com";
     orderedContactKeys[i - 1] = addr;
   }
+  var fake = new FakeNameServer();
   // end of server data simulation
   
-  // Simulate the server providing data
-  var requestedKeys;
-  function simulateRequest(request) {
-    requestedKeys = request;
-    return { "keys": request.join(",") };
-  }
-  function simulateResponse() {
-    response = {};
-    $.each(requestedKeys, function(index, email) {
-      response[email] = fakeName(email.match(/email-(\d+)/)[1]);
-    });
-    return response;
-  }
-
   // Build the widgets and start the lookup
   var contactCache = new DataCache('contact_cache', {
     batchSize: 1,
@@ -43,8 +30,8 @@
       return (key + contactElements).toLowerCase().replace(/ /g, '');
     },
     url: './dummy_response.json',
-    queryRequestFormatter: function reqFmt(request) { return simulateRequest(request); },
-    queryResponseFormatter: function respFmt(response) { return simulateResponse(); },
+    queryRequestFormatter: function reqFmt(request) { return fake.request(request); },
+    queryResponseFormatter: function respFmt(response) { return fake.response(); },
     ajaxType: 'get',   // Github pages will not respond to POST
     ajaxDelayMs: 500  // Slow it down so you can see them fill in
   });

@@ -1,0 +1,58 @@
+<h2>Persistent Cache</h2>
+
+<div class="example">
+  <p>This example shows fetching items multiple items at a time and storing them in
+    a cache that is tied to the page. Use the links on the left to switch to different
+    examples, and when you come back to this example the items will still be populated.</p>
+  <p>Cache filling continues in the background even when you leave this pane. Reload
+    the page in your browser to clear the cache.</p>
+  <div class="filter">
+    <label>Filter results:</label>
+    <input>
+  </div>
+  <div id="persistent_contact_list" class="viewport"></div>
+</div>
+
+<script type="text/javascript">
+  // Simulating data that would be provided by the server
+  var orderedContactKeys = [];
+  for (var i = 1, addr; i <= 99; i++) {
+    addr = "email-" + i + "@example.com";
+    orderedContactKeys[i - 1] = addr;
+  }
+  var fake = new FakeNameServer();
+  // end of server data simulation
+  
+  // Initialize the cache and attach it to the document if it is not already here
+  if (!$(document).data("package_cache")) {
+    $(document).data("package_cache", new DataCache('persistent_contact_cache', {
+      batchSize: 5,
+      indexer: function contactIndexer(key, contact) {
+        var contactElements = contact ? contact.first_name + contact.last_name : '';
+        return (key + contactElements).toLowerCase().replace(/ /g, '');
+      },
+      url: './dummy_response.json',
+      queryRequestFormatter: function reqFmt(request) { return fake.request(request); },
+      queryResponseFormatter: function respFmt(response) { return fake.response(); },
+      ajaxType: 'get',   // Github pages will not respond to POST
+      ajaxDelayMs: 500  // Slow it down so you can see them fill in
+    }));
+  }
+
+  var contactList = $('#persistent_contact_list').filteredList({
+    scrollable: true,
+    filterBox: $('.filter input'),
+    keys: orderedContactKeys,
+    dataCache: $(document).data("package_cache"),
+    renderHit: function renderContact(key, value) {
+      var li = $('<li></li>');
+      li.text(value.first_name + ' ' + value.last_name + ' (' + key + ')');
+      return li;
+    },
+    renderMiss: function renderContactMiss(key) {
+      return $('<li>' + key + '</li>');
+    }
+  });
+  
+  $(document).data("package_cache").lookup(orderedContactKeys);
+</script>
