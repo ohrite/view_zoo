@@ -41,7 +41,7 @@ function FilteredList(viewport, options) {
   this.container.append(loadingEl);
   this.childHeight = $(loadingEl).height();
   this.container.empty();
-  this.containerItemCapacity = Math.floor(this.viewport.height() / this.childHeight);
+  this.containerItemCapacity = Math.ceil(this.viewport.height() / this.childHeight);
 
   if (this.scrollable) {
     viewport.scroll(function() {
@@ -86,6 +86,10 @@ $.extend(FilteredList.prototype, {
 
     if (event.target != this.container[0]) {
       var key = item.data("key");
+      if (!key) {
+        item = item.parent();
+        key = item.data("key");
+      }
 
       if (ArrayUtilities.includes(this.selected, key)) {
         this.selected = ArrayUtilities.removeSorted(this.selected, key);
@@ -110,7 +114,7 @@ $.extend(FilteredList.prototype, {
     this.filteredKeys = _js.select(this.keys, function(key) {
       return ArrayUtilities.includes(matches, key);
     });
-    
+
     return this;
   },
 

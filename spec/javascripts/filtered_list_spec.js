@@ -132,6 +132,23 @@ describe("FilteredList", function() {
         expect(container.find('li:first').hasClass('selected')).toBeFalsy();
       });
 
+      it('should also accept clicks on elements contained by the li', function() {
+        list.renderHit = function hitSpanRenderer(key, value){ return $('<li></li>').text(value).append($('<span></span>').text(key)); };
+        list.dataCache.map({ "adin@test.com": "One in Russian" });
+        list.refilter().redraw();
+
+        expect(container.find('li:first').hasClass('selected')).toBeFalsy();
+        expect(list.selected).toBeEmpty();
+
+        container.find('li:first span').click();
+        expect(container.find('li:first').hasClass('selected')).toBeTruthy();
+        expect(list.selected).toEqual(['adin@test.com']);
+
+        container.find('li:first span').click();
+        expect(container.find('li:first').hasClass('selected')).toBeFalsy();
+        expect(list.selected).toBeEmpty();
+      });
+
       it('should persist selected class while scrolling', function () {
         container.find('li:first').click();
         expect(container.find('li:first').is('.selected')).toBeTruthy();
