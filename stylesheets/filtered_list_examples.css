@@ -2,6 +2,18 @@ body {
   padding: 10px;
 }
 
+.jquery_version_chooser {
+  text-align: center;
+  font-size: 1.2em;
+  font-style: italic;
+}
+
+.nota_bene {
+  font-style: italic;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
 .left, .right {
   vertical-align: top;
   width: 15em;
