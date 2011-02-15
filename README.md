@@ -29,6 +29,8 @@ Filtered List uses Jasmine tests and assumes a Ruby environment.
    1. rake jasmine
 
 and now you will be able to run the tests at http://localhost:8888/
+By default, the tests run with jquery-1.3.2. To run them with 1.4.2,
+use 'JQUERY_VERSION=1.4.2 rake jasmine' in the last step.
 
 ## Alternative plugins:
 
