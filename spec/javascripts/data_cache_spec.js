@@ -166,6 +166,10 @@ describe("DataCache", function() {
           var t0 = new Date().getTime();
           cache.lookup(keys);
           console.log("Elapsed time for lookup of", size, "is", (new Date().getTime() - t0), "ms");
+          
+          t0 = new Date().getTime();
+          cache.find('e l m a f w d o p l m n a');
+          console.log("Elapsed time for find of 13 is", (new Date().getTime() - t0), "ms");
         }
       });
     });

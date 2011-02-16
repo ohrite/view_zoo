@@ -1,5 +1,7 @@
-if [[ -s "${HOME}/.rvm/environments/ruby-1.8.7-tv1_8_7_72@filtered_list" ]] ; then
-  . "${HOME}/.rvm/environments/ruby-1.8.7-tv1_8_7_72@filtered_list"
+RUBY_VERSION=ruby-1.8.7
+
+if [[ -s "${HOME}/.rvm/environments/${RUBY_VERSION}@filtered_list" ]] ; then
+  . "${HOME}/.rvm/environments/${RUBY_VERSION}@filtered_list"
 else
-  rvm use ruby-1.8.7-tv1_8_7_72@filtered_list --create
+  rvm use ${RUBY_VERSION}@filtered_list --create
 fi
