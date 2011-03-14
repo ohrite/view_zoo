@@ -2,7 +2,7 @@ describe("SearchableCollection", function() {
   var collection;
   
   beforeEach(function() {
-    collection = new Backbone.Collection();
+    collection = new Backbone.SearchableCollection();
   });
   
   describe("Backbone.Collection compatibility", function() {
