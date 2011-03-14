@@ -15,6 +15,17 @@ afterEach(function () {
   $.fx.off = false;
 });
 
+function printNode(node, depth, renderer) {
+  renderer = renderer || _.identity;
+  if (node === null) { return ''; }
+  if (depth === 0) { return node.data ? renderer(node.data) + '@' + node.level.toString() : ''; }
+  return '(' + ([printNode(node.left, depth - 1, renderer), printNode(node, 0, renderer), printNode(node.right, depth - 1, renderer)].join('-')) + ')';
+}
+
+function printStack(stack) {
+  return _.map(stack, function(node){ return node.data; });
+}
+
 jasmine.fixture = function () {
   if (!$('.fake_dom').length) {
     $("body", document).prepend($('<div></div>').attr("style", "position: fixed; left: 100%").addClass('fake_dom'));

@@ -2,7 +2,7 @@ describe("SearchableCollection", function() {
   var collection;
   
   beforeEach(function() {
-    collection = new SearchableCollection();
+    collection = new Backbone.Collection();
   });
   
   describe("Backbone.Collection compatibility", function() {
@@ -38,29 +38,21 @@ describe("SearchableCollection", function() {
     });
 
     it("should not match against model keys", function() {
-      expect(collection.search('thingo')).toBeEmpty();
+      expect(collection.fulltextSearch('thingo')).toBeEmpty();
     });
     
     it("should accept a search string and return a match", function() {
-      expect(collection.search('al')).toEqual([model1]);
+      expect(collection.fulltextSearch('al')).toEqual([model1]);
     });
     
     it("should accept a multi-term string and return a match", function() {
-      expect(collection.search('a e')).toEqual([model1, model2]);
+      expect(collection.fulltextSearch('a e')).toEqual([model1, model2]);
     });
     
     it("should complete a search after a model has changed", function() {
       model1.set({ thingo: 'beefy' });
-      expect(collection.search('beefy')).toEqual([model1]);
+      expect(collection.fulltextSearch('beefy')).toEqual([model1]);
     });
-  });
-  
-  describe("#add", function() {
-    
-  });
-  
-  describe("#change", function() {
-    
   });
 
   describe("speed", function() {
@@ -77,10 +69,10 @@ describe("SearchableCollection", function() {
     describe("#add", function() {
       var size;
 
-      it("should add 125 keys ploppily quickly", function() { size = 125; });
+      it("should add 125 keys almostly quickly", function() { size = 125; });
       it("should add 1250 keys fairly quickly", function() { size = 1250; });
       it("should add 2500 keys sorta quickly", function() { size = 2500; });
-      it("should add 5000 keys like quickly", function() { size = 5000; });
+      it("should add 10000 keys like quickly", function() { size = 10000; });
 
       afterEach(function() {
         var t0 = new Date().getTime();
@@ -115,7 +107,7 @@ describe("SearchableCollection", function() {
       
       afterEach(function() {
         var t0 = new Date().getTime(), terms = makeTerms(size);
-        collection.search(terms);
+        collection.fulltextSearch(terms);
         console.log("Elapsed time for search of", size, "is", (new Date().getTime() - t0), "ms");
       });
     });
