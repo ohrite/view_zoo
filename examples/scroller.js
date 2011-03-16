@@ -10,44 +10,56 @@ $(function() {
     events: {
       "keyup #main input": "filter"
     },
+    
     initialize: function() {
       _.bindAll(this, 'render', 'filter', 'scroll');
       this.$(".viewport").html(this.template());
       this.state = new Backbone.Model({
         top: 0,
-        size: this.options.size || 10,
-        height: this.getSize()
+        length: this.options.size || 10,
+        height: this.getSize(),
+        filter: ''
       });
+      console.log('filtered', Items.toArray())
       this.$('.viewport').scroll(this.scroll);
       this.state.bind('change', this.render);
       Items.bind('all', this.render);
     },
     getSize: function() {
       var height, test = new Backbone.Model({id:0});
+      
       this.$('ul').html(this.listTemplate({collection: _([test])}));
       height = this.$('ul li:first').height();
       this.$('ul').empty();
+      
       return height;
     },
     render: function() {
-      var size = Items.size();
+      var length = this.state.get('length'),
+          height = this.state.get('height'),
+          filtered = Items.fulltextSearch(this.state.get('filter')),
+          top = this.state.get('top');
+          
       this.$(".stats").html(this.statsTemplate({
-        total: Items.length,
-        filtered: size,
-        from: this.state.get('top'),
-        to: Math.min(size, this.state.get('top') + this.state.get('size')),
-        ajax: 0
+        filtered: Items.length - filtered.length,
+        from: top + 1,
+        to: Math.min(filtered.length, top + length),
+        loaded: 0
       }));
-      this.$('ul').height(this.state.get('height') * Math.min(size, this.state.get('size')))
-                  .html(this.listTemplate({collection: Items}));
+      
+      this.$('ul').height(height * Math.min(filtered.length, length))
+                  .html(this.listTemplate({ collection: _(filtered) }));
     },
-    filter: function() {
-      console.log("filtering!", arguments);
+    filter: function(e) {
+      this.state.set({ filter: e.target.value });
     },
-    scroll: function() {
-      console.log("scrolling!", arguments)
+    scroll: function(e) {
+      this.state.set({top: Math.floor(e.target.scrollTop / this.state.get('height'))});
     }
   });
   
   window.List = new ListView();
+  
+  _.times(12, function(n){ Items.add({ data: "poop"+n }); });
+  
 });
