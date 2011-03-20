@@ -41,13 +41,6 @@
     ol, ul {
     	list-style: none;
     }
-    .dp20,.dp25,.dp33,.dp50,.dp100{float:left;display:inline;*margin-left:-0.04em;}
-    .dp20{width:20%;}
-    .dp25{width:25%;}
-    .dp33{width:33.33%;}
-    .dp50{width:50%;}
-    .dp100{width:100%;}
-    .clear{clear:both;}
     #container{
       margin:0 auto; width:430px;}
       #main{
@@ -59,9 +52,18 @@
         .viewport{
           overflow-y:auto;}
 
+          .viewport .list{
+             padding-left:5px;}
+             .viewport .list div{
+                padding-bottom: 0.5em;}
+                 .viewport .list .list-index{
+                   border-left: 0.4em solid #999; padding-left: 0.5em;}
+                 .viewport .list .fetched .list-index{
+                   border-left-color: #0c8;}
+
         .stats,.viewport{
           margin:1em;}
-
+          
       #footer{
         color:#666;text-align:center;text-shadow:#fff 0 1px 0;padding-top:2em;}
   </style>
@@ -81,16 +83,16 @@
     </div>
   </div>
   
-  <script type="text/template" id="list-template">
+  <script type="text/template" id="item-template">
     <% collection.each(function(item, index) { %>
-      <li <% if (item.get('fetched')) { %>class="fetched"<% } %>>
+      <div <% if (item.get('fetched')) { %>class="fetched"<% } %>>
         <span class="list-index">
           Item <%= item.cid %>
         </span>
         <span class="list-content">
           Data: <%= item.get('data') %>
         </span>
-      </li>
+      </div>
     <% }); %>
   </script>
 
@@ -106,6 +108,7 @@
   <script src="../public/javascripts/lib/backbone-0.3.3.js"></script>
   <script src="../public/javascripts/searchable_collection.js"></script>
   <script src="../public/javascripts/scrollable_view.js"></script>
+  <script src="../public/javascripts/filterable_scrollable_view.js"></script>
   <script src="scroller.js"></script>
 </body> 
 </html>

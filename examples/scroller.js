@@ -1,65 +1,85 @@
-$(function() {
-  window.Items = new Backbone.SearchableCollection();
-  
-  window.ListView = Backbone.View.extend({
+  window.ListView = Backbone.Plugins.FilterableScrollableView.extend({
     el: $("#main"),
-    listTemplate: _.template($("#list-template").html()),
+    listTemplate: _.template($("#item-template").html()),
     statsTemplate: _.template($("#stats-template").html()),
-    template: _.template('<div class="spacer"/><ul />'),
+    template: _.template('<div class="spacer"/><div class="list" />'),
     
     events: {
       "keyup #main input": "filter"
     },
     
     initialize: function() {
-      _.bindAll(this, 'render', 'filter', 'scroll');
-      this.$(".viewport").html(this.template());
-      this.state = new Backbone.Model({
-        top: 0,
-        length: this.options.size || 10,
-        height: this.getSize(),
-        filter: ''
-      });
-      console.log('filtered', Items.toArray())
-      this.$('.viewport').scroll(this.scroll);
-      this.state.bind('change', this.render);
-      Items.bind('all', this.render);
+      this.loaded = 0;
+      
+      _.bindAll(this, 'refilter', 'redraw', 'render', 'remodel');
+      this.viewportEl.html(this.template());
+      this._scrollState.set({ height: this.getSize() });
+      this.collection.bind('add', this.refilter);
+      this.collection.bind('remove', this.refilter);
+      this.collection.bind('change:fetched', this.remodel);
+      this.collection.bind('change', this.render);
     },
-    getSize: function() {
-      var height, test = new Backbone.Model({id:0});
-      
-      this.$('ul').html(this.listTemplate({collection: _([test])}));
-      height = this.$('ul li:first').height();
-      this.$('ul').empty();
-      
-      return height;
+    remodel: function() {
+      this.loaded++;
+    },
+    refilter: function() {
+      var filter = this._filterState.get('filter');
+      this._filterState.set({
+        filtered: this.collection.fulltextSearch(filter)
+      });
+      this.viewportEl.scrollTop(0);
     },
     render: function() {
-      var length = this.state.get('length'),
-          height = this.state.get('height'),
-          filtered = Items.fulltextSearch(this.state.get('filter')),
-          top = this.state.get('top');
-          
+      var length = this._scrollState.get('length'),
+          height = this._scrollState.get('height'),
+          top = this._scrollState.get('top'),
+          filtered = this._filterState.get('filtered'),
+          from = top,
+          to = Math.min(filtered.length, top + length + 1);
+
       this.$(".stats").html(this.statsTemplate({
-        filtered: Items.length - filtered.length,
-        from: top + 1,
-        to: Math.min(filtered.length, top + length),
-        loaded: 0
+        filtered: this.collection.length - filtered.length,
+        from: from + 1,
+        to: to,
+        loaded: this.loaded
       }));
       
-      this.$('ul').height(height * Math.min(filtered.length, length))
-                  .html(this.listTemplate({ collection: _(filtered) }));
+      this.viewportEl.height(height * Math.min(filtered.length, length));
+      this.$('.spacer').height(from * height);
+      this.$('.list').html(this.listTemplate({
+                        collection: _(filtered.slice(from, to))
+                      }))
+                     .height(height * (filtered.length - from));
     },
-    filter: function(e) {
-      this.state.set({ filter: e.target.value });
-    },
-    scroll: function(e) {
-      this.state.set({top: Math.floor(e.target.scrollTop / this.state.get('height'))});
+    getSize: function() {
+      return this.$('.list')
+                 .html(this.listTemplate({
+                    collection: _([ new Backbone.Model({}) ])
+                  }))
+                 .select("> *:first")
+                 .height();
     }
   });
   
-  window.List = new ListView();
+  Backbone.emulateJSON = true;
+  Backbone.emulateHTTP = true;
   
-  _.times(12, function(n){ Items.add({ data: "poop"+n }); });
+  var StubbedModel = Backbone.Model.extend({
+    url: './fake_ajax.json'
+  });
   
-});
+  var StubbedSearchableCollection = Backbone.Plugins.SearchableCollection.extend({
+    model: StubbedModel
+  });
+  
+  window.List = new ListView({
+    collection: new StubbedSearchableCollection
+  });
+  
+  _.times(50, function(n){ window.List.collection.add({ data: "poop"+n }); });
+
+  var pass = 0, iterator = setInterval(function(){
+    var item = window.List.collection.at(pass++);
+    if (!item) { return clearInterval(iterator); }
+    item.fetch();
+  }, 250);

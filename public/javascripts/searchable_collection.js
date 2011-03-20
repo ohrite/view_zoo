@@ -1,5 +1,6 @@
 (function(){
-  Backbone.SearchableCollection = Backbone.Collection.extend({
+  Backbone.Plugins = Backbone.Plugins || {};
+  Backbone.Plugins.SearchableCollection = Backbone.Collection.extend({
     comparator: function(model) {
       return model.id;
     },
