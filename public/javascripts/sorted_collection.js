@@ -1,6 +1,6 @@
 (function(){
   Backbone.Plugins = Backbone.Plugins || {};
-  Backbone.Plugins.SearchableCollection = Backbone.Collection.extend({
+  Backbone.Plugins.SortedCollection = Backbone.Collection.extend({
     comparator: function(model) {
       return model.id;
     },
@@ -58,16 +58,7 @@
     },
     sort: function() {},
     sortBy: function() {},
-    sortedIndex: function() {},
-    fulltextSearch: function(terms) {
-      terms = terms.split(/\s+/);
-      return this.select(function(model) {
-        var index = model.index || _.values(model.attributes).join('').replace(/\s+/, '').toLowerCase();
-        return _.all(terms, function(term){
-          return index.indexOf(term) != -1;
-        });
-      });
-    }
+    sortedIndex: function() {}
   });
     
   // Underwear methods that we want to implement on the Collection.
@@ -82,5 +73,4 @@
       return _w[method].apply(_, [this.root].concat(_.toArray(arguments)));
     };
   });
-  
 })();

@@ -1,8 +1,10 @@
-  window.ListView = Backbone.Plugins.FilterableScrollableView.extend({
-    el: $("#main"),
-    listTemplate: _.template($("#item-template").html()),
+(function(){
+  window.ListView = Backbone.Plugins.ScrollableFilterableView.extend({
+    el: "#main",
+    viewportEl: "#main .viewport",
+    listTagName: "div",
+    itemTemplate: _.template($("#item-template").html()),
     statsTemplate: _.template($("#stats-template").html()),
-    template: _.template('<div class="spacer"/><div class="list" />'),
     
     events: {
       "keyup #main input": "filter"
@@ -11,25 +13,14 @@
     initialize: function() {
       this.loaded = 0;
       
-      _.bindAll(this, 'refilter', 'redraw', 'render', 'remodel');
-      this.viewportEl.html(this.template());
-      this._scrollState.set({ height: this.getSize() });
-      this.collection.bind('add', this.refilter);
-      this.collection.bind('remove', this.refilter);
+      _.bindAll(this, 'render', 'remodel');
       this.collection.bind('change:fetched', this.remodel);
-      this.collection.bind('change', this.render);
     },
     remodel: function() {
       this.loaded++;
     },
-    refilter: function() {
-      var filter = this._filterState.get('filter');
-      this._filterState.set({
-        filtered: this.collection.fulltextSearch(filter)
-      });
-      this.viewportEl.scrollTop(0);
-    },
     render: function() {
+      window.ListView.__super__.render.call(this);
       var length = this._scrollState.get('length'),
           height = this._scrollState.get('height'),
           top = this._scrollState.get('top'),
@@ -43,21 +34,6 @@
         to: to,
         loaded: this.loaded
       }));
-      
-      this.viewportEl.height(height * Math.min(filtered.length, length));
-      this.$('.spacer').height(from * height);
-      this.$('.list').html(this.listTemplate({
-                        collection: _(filtered.slice(from, to))
-                      }))
-                     .height(height * (filtered.length - from));
-    },
-    getSize: function() {
-      return this.$('.list')
-                 .html(this.listTemplate({
-                    collection: _([ new Backbone.Model({}) ])
-                  }))
-                 .select("> *:first")
-                 .height();
     }
   });
   
@@ -68,12 +44,12 @@
     url: './fake_ajax.json'
   });
   
-  var StubbedSearchableCollection = Backbone.Plugins.SearchableCollection.extend({
+  var StubbedSortedCollection = Backbone.Plugins.SortedCollection.extend({
     model: StubbedModel
   });
   
   window.List = new ListView({
-    collection: new StubbedSearchableCollection
+    collection: new StubbedSortedCollection
   });
   
   _.times(50, function(n){ window.List.collection.add({ data: "poop"+n }); });
@@ -83,3 +59,4 @@
     if (!item) { return clearInterval(iterator); }
     item.fetch();
   }, 250);
+})();
